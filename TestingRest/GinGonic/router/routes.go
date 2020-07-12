@@ -3,6 +3,8 @@ package router
 import (
 	"github.com/gin-gonic/gin"
 	controller "testing.rest.ginGonic/controller"
+	provider "testing.rest.ginGonic/provider/http"
+	"testing.rest.ginGonic/service"
 )
 
 var (
@@ -10,13 +12,19 @@ var (
 )
 
 func StartApp() {
-	mapUrls()
+
+	countryController := createCountryController()
+	router.GET("/locations/countries/:country_id", countryController.GetCountry)
 
 	if err := router.Run(":8080"); err != nil {
 		panic(err)
 	}
 }
 
-func mapUrls() {
-	router.GET("/locations/countries/:country_id", controller.GetCountry)
+func createCountryController() *controller.CountryController {
+	provider := provider.CountryProvider{}
+	service := service.CountryService{Provider: &provider}
+	controller := controller.CountryController{Service: &service}
+
+	return &controller
 }

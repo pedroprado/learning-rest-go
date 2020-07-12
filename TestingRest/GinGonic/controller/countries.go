@@ -1,17 +1,21 @@
 package controller
 
 import (
-	"fmt"
-
 	"github.com/gin-gonic/gin"
 	"testing.rest.ginGonic/service"
 )
 
-func GetCountry(c *gin.Context) {
+type CountryControllerInterface interface {
+	GetCountry(c *gin.Context)
+}
 
-	country, err := service.GetCountry(c.Param("country_id"))
+type CountryController struct {
+	Service service.CountryServiceInterface
+}
+
+func (controller *CountryController) GetCountry(c *gin.Context) {
+	country, err := controller.Service.GetCountry(c.Param("country_id"))
 	if err != nil {
-		fmt.Printf("%+v", err)
 		c.JSON(err.Status, err)
 		return
 	}

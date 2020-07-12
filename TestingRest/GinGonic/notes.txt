@@ -1,5 +1,15 @@
 Why is so  Hard to Mock in Go?
 
-1.Go is a compiled laguage: thus, we cannot change the behaviour of a function at RUNTIME
+-Go is a compiled laguage: thus, we cannot change the behaviour of a function at RUNTIME
+-In the background, when go is testing it is compiling the code and executing the test cases
+against that compiled code 
+-Thus, we cannot mock functions (because it is already compiled)!
+-What we can do is CHANGE the behaviour of functions, according to the context (main context, test context)
+-This behavior is changed by using INTERFACES 
+-Mocks can be done through an Interface: The layers should be interfaces
 
-2.Mocks can be done through an Interface: The layers should be interfaces
+
+FUNCTIONS cannot be mocked, but METHODS CAN BE MOCKED!
+
+-METHODS are FUNCTIONS  that are TIED to a Go Type!
+-We can create METHODS by IMPLEMENTING INTERFACES in certain types

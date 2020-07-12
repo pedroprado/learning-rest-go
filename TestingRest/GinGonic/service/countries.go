@@ -2,28 +2,19 @@ package service
 
 import (
 	"testing.rest.ginGonic/domain"
+	provider "testing.rest.ginGonic/provider/http"
 	"testing.rest.ginGonic/utils/errors"
 )
 
-func GetCountry(countryId string) (*domain.Country, *errors.ApiError) {
+type CountryServiceInterface interface {
+	GetCountry(countryId string) (*domain.Country, *errors.ApiError)
+}
 
-	if countryId == "AR" {
-		ar := &domain.Country{
-			Id:     "ar_es",
-			Name:   "Argentina",
-			Locale: "America",
-			GeoInformation: domain.GeoInformation{
-				Location: domain.Location{
-					Latitude:  19.222,
-					Longitude: 20.000,
-				},
-			},
-			States: []domain.State{},
-		}
-		return ar, nil
-	}
-	return nil, &errors.ApiError{
-		Status:  204,
-		Message: "Country Not Found",
-	}
+type CountryService struct {
+	Provider provider.CountryProviderInterface
+}
+
+func (service *CountryService) GetCountry(countryId string) (*domain.Country, *errors.ApiError) {
+
+	return service.Provider.FetchCountry(countryId)
 }
