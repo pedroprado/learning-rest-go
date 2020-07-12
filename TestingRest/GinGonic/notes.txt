@@ -1,0 +1,5 @@
+Why is so  Hard to Mock in Go?
+
+1.Go is a compiled laguage: thus, we cannot change the behaviour of a function at RUNTIME
+
+2.Mocks can be done through an Interface: The layers should be interfaces
