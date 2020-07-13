@@ -6,9 +6,9 @@ import (
 	"testing.rest.ginGonic/utils/errors"
 )
 
-var CountryProvider provider.CountryProviderInterface
+var CountryProvider provider.ICountryProvider
 
-type CountryServiceInterface interface {
+type ICountryService interface {
 	GetCountry(countryId string) (*domain.Country, *errors.ApiError)
 }
 

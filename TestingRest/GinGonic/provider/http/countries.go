@@ -5,7 +5,7 @@ import (
 	"testing.rest.ginGonic/utils/errors"
 )
 
-type CountryProviderInterface interface {
+type ICountryProvider interface {
 	FetchCountry(countryId string) (*domain.Country, *errors.ApiError)
 }
 

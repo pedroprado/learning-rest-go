@@ -5,9 +5,9 @@ import (
 	"testing.rest.ginGonic/service"
 )
 
-var CountryService service.CountryServiceInterface
+var CountryService service.ICountryService
 
-type CountryControllerInterface interface {
+type ICountryController interface {
 	GetCountry(c *gin.Context)
 }
 
