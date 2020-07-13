@@ -6,15 +6,20 @@ import (
 	"testing.rest.ginGonic/utils/errors"
 )
 
+var CountryProvider provider.CountryProviderInterface
+
 type CountryServiceInterface interface {
 	GetCountry(countryId string) (*domain.Country, *errors.ApiError)
 }
 
 type CountryService struct {
-	Provider provider.CountryProviderInterface
+}
+
+func init() {
+	CountryProvider = &provider.CountryProvider{}
 }
 
 func (service *CountryService) GetCountry(countryId string) (*domain.Country, *errors.ApiError) {
 
-	return service.Provider.FetchCountry(countryId)
+	return CountryProvider.FetchCountry(countryId)
 }

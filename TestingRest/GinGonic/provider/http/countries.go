@@ -9,7 +9,9 @@ type CountryProviderInterface interface {
 	FetchCountry(countryId string) (*domain.Country, *errors.ApiError)
 }
 
-type CountryProvider struct {
+type CountryProvider struct{}
+
+func init() {
 }
 
 func (provider *CountryProvider) FetchCountry(countryId string) (*domain.Country, *errors.ApiError) {
@@ -29,7 +31,7 @@ func (provider *CountryProvider) FetchCountry(countryId string) (*domain.Country
 		return ar, nil
 	}
 	return nil, &errors.ApiError{
-		Status:  204,
-		Message: "Country Not Found",
+		Status:  500,
+		Message: "Internal Server Error",
 	}
 }

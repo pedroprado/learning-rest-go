@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"reflect"
 	"testing"
 
@@ -24,32 +25,39 @@ func (mock *mockCountryService) GetCountry(countryId string) (*domain.Country, *
 	return mock.mockGetFunc(countryId)
 }
 
-var mockService = mockCountryService{
-	mockGetFunc: func(countryId string) (*domain.Country, *errors.ApiError) {
-		//case valid country_id
-		if countryId == "AR" {
-			return &domain.Country{
-				Id:     "ar_es",
-				Name:   "Argentina",
-				Locale: "America",
-			}, nil
-		}
-		//case invalid country_id
-		return nil, &errors.ApiError{
-			Status:  500,
-			Message: "Not Found",
-		}
-	},
-}
+var mockService mockCountryService
+var controller *CountryController
 
-var controller = &CountryController{
-	Service: &mockService,
+func TestMain(m *testing.M) {
+	mockService = mockCountryService{
+		mockGetFunc: func(countryId string) (*domain.Country, *errors.ApiError) {
+			//case valid country_id
+			if countryId == "AR" {
+				return &domain.Country{
+					Id:     "ar_es",
+					Name:   "Argentina",
+					Locale: "America",
+				}, nil
+			}
+			//case invalid country_id
+			return nil, &errors.ApiError{
+				Status:  500,
+				Message: "Internal Server Error",
+			}
+		},
+	}
+	CountryService = &mockService
+	controller = &CountryController{}
+
+	os.Exit(m.Run())
 }
 
 func TestGetCountry(t *testing.T) {
-
-	controller := &CountryController{
-		Service: &mockService,
+	expectedStatus := 200
+	expectedCountry := domain.Country{
+		Id:     "ar_es",
+		Name:   "Argentina",
+		Locale: "America",
 	}
 
 	response := httptest.NewRecorder()
@@ -59,19 +67,10 @@ func TestGetCountry(t *testing.T) {
 
 	controller.GetCountry(testContext)
 
-	var country domain.Country
+	country := domain.Country{}
 	err := json.Unmarshal(response.Body.Bytes(), &country)
 	if err != nil {
 		fmt.Printf("Error: %+v\n", err)
-	}
-	// fmt.Printf("%+v\n", response.Code)
-	// fmt.Printf("%+v\n", country)
-
-	expectedStatus := 200
-	expectedCountry := domain.Country{
-		Id:     "ar_es",
-		Name:   "Argentina",
-		Locale: "America",
 	}
 
 	if !reflect.DeepEqual(expectedStatus, response.Code) {
@@ -84,6 +83,11 @@ func TestGetCountry(t *testing.T) {
 }
 
 func TestGetCountryError(t *testing.T) {
+	expectedStatus := 500
+	expectedError := errors.ApiError{
+		Status:  500,
+		Message: "Internal Server Error",
+	}
 
 	response := httptest.NewRecorder()
 	testContext, _ := gin.CreateTestContext(response)
@@ -92,18 +96,10 @@ func TestGetCountryError(t *testing.T) {
 
 	controller.GetCountry(testContext)
 
-	var apiErr errors.ApiError
+	apiErr := errors.ApiError{}
 	err := json.Unmarshal(response.Body.Bytes(), &apiErr)
 	if err != nil {
 		fmt.Printf("Error: %+v\n", err)
-	}
-	// fmt.Printf("%+v\n", response.Code)
-	// fmt.Printf("%+v\n", apiErr)
-
-	expectedStatus := 500
-	expectedError := errors.ApiError{
-		Status:  500,
-		Message: "Not Found",
 	}
 
 	if !reflect.DeepEqual(expectedStatus, response.Code) {

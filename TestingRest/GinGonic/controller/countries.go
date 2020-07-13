@@ -5,16 +5,21 @@ import (
 	"testing.rest.ginGonic/service"
 )
 
+var CountryService service.CountryServiceInterface
+
 type CountryControllerInterface interface {
 	GetCountry(c *gin.Context)
 }
 
 type CountryController struct {
-	Service service.CountryServiceInterface
+}
+
+func init() {
+	CountryService = &service.CountryService{}
 }
 
 func (controller *CountryController) GetCountry(c *gin.Context) {
-	country, err := controller.Service.GetCountry(c.Param("country_id"))
+	country, err := CountryService.GetCountry(c.Param("country_id"))
 	if err != nil {
 		c.JSON(err.Status, err)
 		return

@@ -1,0 +1,20 @@
+Black Box Tests
+(State Verification)
+
+-Black box tests only care about "inputs" and "outputs"
+-They validate the OUTPUTS for a given INPUT
+-They dont care about the inner behavior of the module being tested
+
+
+White Box Tests
+(Behavior verification)
+
+-Tests that know about the inner behavior of the module
+-They are focused in validadte THE BEHAVIOR of that module
+
+
+Functional Testing
+-Uses Black Box concept: they validate the output of a given testing module
+-Functional Tests need a Running Aplication to be performed
+-These tests should validate the output, and the last layer used should be mocked 
+(for example, mocking the response of a external api provider)
