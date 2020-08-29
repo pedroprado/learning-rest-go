@@ -11,8 +11,7 @@ type ICountryController interface {
 	GetCountry(c *gin.Context)
 }
 
-type CountryController struct {
-}
+type CountryController struct{}
 
 func init() {
 	CountryService = &service.CountryService{}
